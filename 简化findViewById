@@ -1,0 +1,18 @@
+写代码的时候大量使用findViewById，而又不喜欢用ViewInject
+
+public class V{
+  public static <T extends View> T f(Activity context,int id){
+    return (T) context.findViewById(id);
+  }
+}
+
+  public static <T extends View> T f(View rootView,int id){
+    return (T) rootView.findViewById(id);
+  }
+  
+  
+  
+MainActivity.java
+
+TextView textView = V.f(this,R.id.textView);
+ImageView imageView = V.f(convertView,R.in.image);
