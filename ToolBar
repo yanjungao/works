@@ -1,0 +1,42 @@
+android 5.0 SDK 提供了一个控件ToolBar，也就是之前ActionBar的升级
+为了兼容，要选用v7包下的ToolBar
+
+为了之后设定方便，我们先在 res/values/styles.xml 里增加一个名为 AppTheme.Base 的风格
+<style name="AppTheme.Base" parent="Theme.AppCompat">
+  <item name="windowActionBar">false</item>
+  <item name="android:windowNoTitle">true</item>
+</style>
+
+因为此范例只使用 Toolbar，所以我们要将让原本的 ActionBar 隐藏起来，然后将原本 AppTheme 的 parent 属性 改为上面的AppTheme.Base，代码如下：
+<resources>
+ 
+  <!-- Base application theme. -->
+  <style name="AppTheme" parent="AppTheme.Base">
+  </style>
+   
+  <style name="AppTheme.Base" parent="Theme.AppCompat">
+    <item name="windowActionBar">false</item>
+    <del><item name="android:windowNoTitle">true</item></del>
+    <!-- 使用 API Level 22 編譯的話，要拿掉前綴字 -->
+    <item name="windowNoTitle">true</item>
+  </style>
+ 
+</resources>
+
+再来调整Android 5.0的style：  /res/values-v21/styles.xml，也将其 parent 属性改为  AppTheme.Base：
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="AppTheme.Base">
+    </style>
+</resources>
+再来写界面布局
+<android.support.v7.widget.Toolbar
+  android:id="@+id/toolbar"
+  android:layout_height="?attr/actionBarSize"
+  android:layout_width="match_parent" >
+ 
+</android.support.v7.widget.Toolbar>
+
+在 MainActivity.java 中加入 Toolbar 的声明：
+Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+setSupportActionBar(toolbar);
