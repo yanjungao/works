@@ -1,0 +1,162 @@
+我们知道，基于android系统的应用程序的开发，界面设计是非常重要的，它关系着用户体验的好坏。一个好的界面设计，不是用一个xml布局就可以搞定的。当一个activity中的控件非常多的时候，所有的布局文件都放在一个xml文件中，很容易想象那是多么糟糕的事情！笔者通过自身的经历，用include控件来解决这个问题，下面是一个小例子，仅仅实现的是布局，没有响应代码的设计。
+
+**************user.xml文件内容如下：***************************************
+
+[java] view plaincopy
+<?xml version="1.0" encoding="utf-8"?>  
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"  
+    android:layout_width="fill_parent"  
+    android:layout_height="fill_parent"  
+    android:orientation="horizontal" >  
+  
+    <TextView  
+        android:layout_width="wrap_content"  
+        android:layout_height="wrap_content"          
+        android:text="用户名： " />  
+    <EditText   
+        android:layout_width="150dp"  
+        android:layout_height="wrap_content"  
+        android:id="@+id/userName"  
+        android:hint="请输入用户名"   
+        />  
+</LinearLayout>  
+
+ **************passwd.xml文件内容如下：***************************************
+
+[java] view plaincopy
+<?xml version="1.0" encoding="utf-8"?>  
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"  
+    android:layout_width="fill_parent"  
+    android:layout_height="fill_parent"  
+    android:orientation="horizontal" >  
+  
+     <TextView  
+        android:layout_width="wrap_content"  
+        android:layout_height="wrap_content"          
+        android:text="密     码：" />  
+    <EditText   
+        android:layout_width="150dp"  
+        android:layout_height="wrap_content"  
+        android:id="@+id/passWd"  
+        android:hint="请输入密码"   
+        />  
+</LinearLayout>  
+
+
+ **************login.xml文件内容如下：***************************************
+[java] view plaincopy
+<?xml version="1.0" encoding="utf-8"?>  
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"  
+    android:layout_width="fill_parent"  
+    android:layout_height="fill_parent"  
+    android:orientation="horizontal" >  
+  
+    <Button   
+        android:layout_width="80dp"  
+        android:layout_height="wrap_content"  
+        android:id="@+id/bt"  
+        android:hint="确定"  
+          
+       />  
+    <Button   
+        android:layout_width="80dp"  
+        android:layout_height="wrap_content"  
+        android:id="@+id/reset"  
+        android:layout_toRightOf="@id/bt"  
+        android:hint="重置"          
+       />  
+</RelativeLayout>  
+
+**************main.xml文件内容如下：***************************************
+
+[java] view plaincopy
+<?xml version="1.0" encoding="utf-8"?>  
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"  
+    android:layout_width="fill_parent"  
+    android:layout_height="fill_parent"  
+    android:orientation="vertical"   
+    android:layout_alignParentBottom="true">  
+  
+<RelativeLayout   
+    android:layout_width="fill_parent"  
+    android:layout_height="fill_parent"  
+    android:orientation="vertical"   
+    android:layout_alignParentBottom="true">  
+  
+ <LinearLayout  
+    android:layout_width="fill_parent"  
+    android:layout_height="wrap_content"  
+    android:id="@+id/head"  
+    android:layout_alignParentTop="true">  
+    
+      <include        
+      android:layout_width="fill_parent"  
+      layout="@layout/user">  
+      </include>    
+ </LinearLayout>  
+    
+  <LinearLayout  
+    android:layout_width="fill_parent"  
+    android:layout_height="wrap_content"  
+    android:id="@+id/middle"  
+    android:layout_below="@id/head"  
+    android:layout_alignParentLeft="true">  
+         
+      <include        
+      android:layout_width="fill_parent"  
+      layout="@layout/passwd">  
+      </include>       
+          
+   </LinearLayout>  
+       
+   <LinearLayout  
+    android:layout_width="fill_parent"  
+    android:layout_height="wrap_content"  
+    android:id="@+id/foot"  
+    android:layout_below="@id/middle"  
+    android:layout_alignParentRight="true">    
+    
+      <include        
+      android:layout_width="fill_parent"  
+      layout="@layout/login">  
+      </include>   
+        
+     </LinearLayout>    
+</RelativeLayout>    
+</LinearLayout>  
+
+
+***********************程序运行结果如下：****************************
+
+如果在main.xml中这样写：  
+<?xml version="1.0" encoding="utf-8"?>  
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"  
+    android:layout_width="fill_parent"  
+    android:layout_height="fill_parent"  
+    android:orientation="vertical"   
+    android:layout_alignParentBottom="true">  
+    
+      <include        
+      android:layout_width="fill_parent"  
+      layout="@layout/user">  
+      </include>    
+         
+      <include        
+      android:layout_width="fill_parent"  
+      layout="@layout/passwd">  
+      </include>              
+     
+      <include        
+      android:layout_width="fill_parent"  
+      layout="@layout/login">  
+      </include>        
+    
+</LinearLayout>  
+
+
+******************那么该情况下的运行结果如下：*************************
+
+
+
+很显然运行结果与预期不符，接下来的四个控件出不来，为什么呢？（想必大家在做实验的时候，肯定遇到过这个问题！）
+其实关键的地方是main文件中对各个xml的布局，没有相应的布局，结果是非常惨的，大家可以根据我的代码在修改下相应的布局，体会下main中布局的重要性！
