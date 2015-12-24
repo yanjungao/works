@@ -1,0 +1,104 @@
+/**
+ * 清除缓存
+ * Created by Administrator on 2015/12/24 0024.
+ */
+public class DataCleanManager {
+
+    public static void cleanInternalCache(Context context){
+        deleteFolderFile(context.getCacheDir().toString(),true);
+    }
+
+    /**
+     * 清除数据
+     * @param filePath
+     * @param deleteThisPath
+     */
+    private static void deleteFolderFile(String filePath, boolean deleteThisPath) {
+        if (!TextUtils.isEmpty(filePath)){
+            File file = new File(filePath);
+            if (file.isDirectory()){
+                File file1s[] = file.listFiles();
+                for (int i = 0; i < file1s.length; i++) {
+                    deleteFolderFile(file1s[i].getAbsolutePath(),true);
+                }
+            }
+            if (deleteThisPath){
+                if (!file.isDirectory()){
+                    file.delete();
+                }else {
+                    if (file.listFiles().length == 0){
+
+                    }
+                }
+            }
+        }
+    }
+    /**
+     * 清除本应用SharedPrefence
+     */
+    public  static void cleanSharedPrefence(Context context){
+        deleteFileByDirectory(new File("/data/data/"+context.getPackageName()+"/shared_prefs"));
+    }
+    /**
+     * 清除本应用cache目录
+     */
+    public static void cleanCache(Context context){
+        deleteFileByDirectory(new File("/data/data/"+context.getPackageName()+"/cache"));
+    }
+    /**
+     * 删除某个文件夹下的文件
+     * @param cacheDir
+     */
+    private static void deleteFileByDirectory(File cacheDir) {
+        if (cacheDir !=null&&  cacheDir.exists()&&cacheDir.isDirectory()){
+            for (File item:cacheDir.listFiles()){
+                item.delete();
+            }
+        }
+    }
+    /**
+     * 文件大小
+     */
+    public  static long getFolderSize(File file){
+        long size = 0;
+        File[] files = file.listFiles();
+        for (int i = 0; i < files.length; i++) {
+            if (files[i].isDirectory()){
+                size = size+getFolderSize(files[i]);
+            }else {
+                size = size+files[i].length();
+            }
+        }
+        return  size;
+     }
+    /**
+     * 格式化单位
+     */
+    public static String getFromatSize(double size){
+        double kiloByte = size/1024;
+        if (kiloByte <1){
+            return size+"byte";
+        }
+        double megaByte = kiloByte/1024;
+        if (megaByte <1){
+            BigDecimal result = new BigDecimal(Double.toString(kiloByte));
+            return result.setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString()+"KB";
+        }
+
+        double gigaByte = megaByte/1024;
+        if (gigaByte<1){
+            BigDecimal result1 = new BigDecimal(Double.toString(megaByte));
+            return result1.setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString()+"MB";
+        }
+        double teraByte = gigaByte/1024;
+       if (teraByte<1){
+           BigDecimal result2 = new BigDecimal(Double.toString(gigaByte));
+           return result2.setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString()+"GB";
+       }
+        return null;
+    }
+
+    public static String getCatcheSize(File file){
+        return getFromatSize(getFolderSize(file));
+    }
+}
