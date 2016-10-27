@@ -1,0 +1,36 @@
+android录制MP3格式的文件，需要借助NDK jni来完成
+NDK介绍及下载
+http://wear.techbrood.com/tools/sdk/ndk/index.html
+android studio配置NDK
+1.project structure里面配置NDK路径
+2.src下的build.gradle里defaultConfig下添加
+    ndk {
+
+            moduleName"mp3lame"
+
+            ldLibs "log", "z", "m"
+
+            abiFilters "armeabi", "armeabi-v7a"
+
+        }
+3.gradle.properties最后添加
+android.useDeprecatedNdk=true
+
+4.https://github.com/talzeus/AndroidMp3Recorder
+项目下载下来，jni文件夹拷贝到main下 audiorecoder拷贝到项目里
+simplelame的.h和.c文件名要改成直接项目的路径，内容里面的路径也应做相应更改
+libs下的文件都拷贝到自己项目的libs下
+
+5.build   make project
+此时build>intermediates>ndk>debug下lib和obj下应该都有相应的.so文件了
+NDK配置完成
+
+可以调用MP3recoder录制MP3格式的录音了。
+
+备注：android调用本地c c++语言的方法就是在需要调用的类里加上本地方法
+static {
+		System.loadLibrary("mp3lame");
+	}
+  
+  例：public native static void close();
+
